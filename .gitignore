@@ -38,3 +38,9 @@
 
 # uploaded puzzles
 puzzle_postprods/
+
+# heroku psql
+.env
+
+# vscode 
+.code-workspace

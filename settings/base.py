@@ -10,7 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 import datetime
-import os
+import os, sys
+import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -78,10 +80,7 @@ WSGI_APPLICATION = "puzzlord.wsgi.application"
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-    }
+    "default": dj_database_url.config(conn_max_age=600, ssl_require=True),
 }
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
@@ -131,13 +130,13 @@ LOGIN_URL = "/login"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
-# EMAIL_USE_TLS = True
-# EMAIL_HOST = "FIXME"
-# EMAIL_HOST_USER = "FIXME"
-# EMAIL_HOST_PASSWORD = "FIXME"
-# EMAIL_PORT = FIXME
-# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-# EMAIL_SUBJECT_PREFIX = ""
+EMAIL_USE_TLS = True
+EMAIL_HOST = "smtp.sendgrid.net"
+EMAIL_HOST_USER = os.getenv("EMAIL_UN")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PW")
+EMAIL_PORT = "587"
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_SUBJECT_PREFIX = "[SPH5 Puzzlord] "
 
 LOGGING = {
     "version": 1,
@@ -146,43 +145,43 @@ LOGGING = {
         "django": {"format": "%(asctime)s [%(levelname)s] %(module)s\n%(message)s"},
         "puzzles": {"format": "%(asctime)s [%(levelname)s] %(message)s"},
     },
-    "handlers": {
-        "django": {
-            "level": "DEBUG",
-            "class": "logging.FileHandler",
-            "filename": "/srv/mhpuzzlord/logs/django.log",
-            "formatter": "django",
-        },
-        "puzzle": {
-            "level": "DEBUG",
-            "class": "logging.FileHandler",
-            "filename": "/srv/mhpuzzlord/logs/puzzle.log",
-            "formatter": "puzzles",
-        },
-        "request": {
-            "level": "DEBUG",
-            "class": "logging.FileHandler",
-            "filename": "/srv/mhpuzzlord/logs/request.log",
-            "formatter": "puzzles",
-        },
-    },
-    "loggers": {
-        "django": {
-            "handlers": ["django"],
-            "level": "DEBUG",
-            "propagate": True,
-        },
-        "puzzles.puzzle": {
-            "handlers": ["puzzle"],
-            "level": "DEBUG",
-            "propagate": False,
-        },
-        "puzzles.request": {
-            "handlers": ["request"],
-            "level": "DEBUG",
-            "propagate": False,
-        },
-    },
+    # "handlers": {
+    #     "django": {
+    #         "level": "DEBUG",
+    #         "class": "logging.FileHandler",
+    #         "filename": "/srv/mhpuzzlord/logs/django.log",
+    #         "formatter": "django",
+    #     },
+    #     "puzzle": {
+    #         "level": "DEBUG",
+    #         "class": "logging.FileHandler",
+    #         "filename": "/srv/mhpuzzlord/logs/puzzle.log",
+    #         "formatter": "puzzles",
+    #     },
+    #     "request": {
+    #         "level": "DEBUG",
+    #         "class": "logging.FileHandler",
+    #         "filename": "/srv/mhpuzzlord/logs/request.log",
+    #         "formatter": "puzzles",
+    #     },
+    # },
+    # "loggers": {
+    #     "django": {
+    #         "handlers": ["django"],
+    #         "level": "DEBUG",
+    #         "propagate": True,
+    #     },
+    #     "puzzles.puzzle": {
+    #         "handlers": ["puzzle"],
+    #         "level": "DEBUG",
+    #         "propagate": False,
+    #     },
+    #     "puzzles.request": {
+    #         "handlers": ["request"],
+    #         "level": "DEBUG",
+    #         "propagate": False,
+    #     },
+    # },
 }
 
 # only if you want to do postprodding

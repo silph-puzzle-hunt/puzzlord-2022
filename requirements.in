@@ -1,6 +1,7 @@
 # I like pip-tools for pinning dependencies: https://github.com/jazzband/pip-tools
 pip-tools==5.3.1
 django
+dj-database-url
 gevent
 gunicorn
 newrelic
@@ -9,3 +10,5 @@ bleach
 gitpython
 matplotlib
 numpy
+whitenoise
+psycopg2
